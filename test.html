@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Note Taking App</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    text-align: center;
+  }
+  input[type="text"] {
+    width: calc(100% - 80px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  button {
+    padding: 8px 12px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  .note {
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  .note button {
+    background-color: #dc3545;
+    margin-left: 5px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Note Taking App</h1>
+  <div id="loginForm">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Log In</button>
+  </div>
+  <div id="notesSection" style="display:none;">
+    <input type="text" id="noteInput" placeholder="Enter your note">
+    <button onclick="saveNote()">Save Note</button>
+    <div id="notes"></div>
+  </div>
+</div>
+
+<script>
+  // User credentials
+  const username = 'diego';
+  const password = '101010';
+
+  let loggedIn = false;
+  let notes = [];
+
+  // Function to toggle between login form and notes section
+  function toggleLoginAndNotes() {
+    const loginForm = document.getElementById('loginForm');
+    const notesSection = document.getElementById('notesSection');
+    if (loggedIn) {
+      loginForm.style.display = 'none';
+      notesSection.style.display = 'block';
+    } else {
+      loginForm.style.display = 'block';
+      notesSection.style.display = 'none';
+    }
+  }
+
+  // Function to check login credentials
+  function login() {
+    const enteredUsername = document.getElementById('username').value;
+    const enteredPassword = document.getElementById('password').value;
+    if (enteredUsername === username && enteredPassword === password) {
+      loggedIn = true;
+      toggleLoginAndNotes();
+      loadNotes();
+    } else {
+      alert('Invalid username or password');
+    }
+  }
+
+  // Function to save a note
+  function saveNote() {
+    const noteInput = document.getElementById('noteInput');
+    const noteText = noteInput.value.trim();
+    if (noteText !== '') {
+      notes.push(noteText);
+      displayNotes();
+      saveNotesToLocalStorage();
+      noteInput.value = '';
+    } else {
+      alert('Please enter a note');
+    }
+  }
+
+  // Function to delete a note
+  function deleteNote(index) {
+    notes.splice(index, 1);
+    displayNotes();
+    saveNotesToLocalStorage();
+  }
+
+  // Function to display notes
+  function displayNotes() {
+    const notesContainer = document.getElementById('notes');
+    notesContainer.innerHTML = '';
+    notes.forEach((note, index) => {
+      const noteDiv = document.createElement('div');
+      noteDiv.classList.add('note');
+      noteDiv.innerHTML = `
+        <span>${note}</span>
+        <button onclick="deleteNote(${index})">Delete</button>
+      `;
+      notesContainer.appendChild(noteDiv);
+    });
+  }
+
+  // Function to load notes from local storage
+  function loadNotes() {
+    const storedNotes = localStorage.getItem('notes');
+    if (storedNotes) {
+      notes = JSON.parse(storedNotes);
+      displayNotes();
+    }
+  }
+
+  // Function to save notes to local storage
+  function saveNotesToLocalStorage() {
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }
+</script>
+</body>
+</html>
