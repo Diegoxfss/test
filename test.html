@@ -55,7 +55,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>Note Taking App</h1>
+  <h1>notes</h1>
   <div id="loginForm">
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
@@ -64,6 +64,7 @@
   <div id="notesSection" style="display:none;">
     <input type="text" id="noteInput" placeholder="Enter your note">
     <button onclick="saveNote()">Save Note</button>
+    <button onclick="logout()">Log Out</button>
     <div id="notes"></div>
   </div>
 </div>
@@ -100,6 +101,16 @@
     } else {
       alert('Invalid username or password');
     }
+  }
+
+  // Function to logout
+  function logout() {
+    loggedIn = false;
+    toggleLoginAndNotes();
+    // Clear stored notes
+    localStorage.removeItem('notes');
+    // Clear displayed notes
+    document.getElementById('notes').innerHTML = '';
   }
 
   // Function to save a note
