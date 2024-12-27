@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life in the UK Test</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <style>
+    .question { margin-bottom: 20px; }
+    .options button { margin-bottom: 5px; width: 100%; }
+    .correct { background-color: #28a745 !important; color: white; }
+    .incorrect { background-color: #dc3545 !important; color: white; }
+    .explanation { margin-top: 10px; font-style: italic; }
+    .score-section { margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Life in the UK Test</h1>
+    <div id="quiz-container" class="mt-4"></div>
+    <div class="score-section text-center d-none">
+      <h2>Your Score: <span id="score"></span>/50</h2>
+      <button class="btn btn-primary" onclick="restartQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "What is the capital of the UK?", answers: ["London", "Edinburgh", "Cardiff", "Belfast"], correct: 0, explanation: "London is the capital of the UK." },
+      { question: "Who was the first Prime Minister of the UK?", answers: ["Winston Churchill", "Robert Walpole", "Margaret Thatcher", "Tony Blair"], correct: 1, explanation: "Robert Walpole is considered the first Prime Minister of the UK." },
+      { question: "What is the national flower of England?", answers: ["Rose", "Thistle", "Shamrock", "Daffodil"], correct: 0, explanation: "The rose is the national flower of England." },
+      { question: "What is the UK Parliament made up of?", answers: ["The House of Commons", "The House of Lords", "The Monarch", "All of the above"], correct: 3, explanation: "The UK Parliament consists of the House of Commons, the House of Lords, and the Monarch." },
+      { question: "What is the name of the UK national anthem?", answers: ["Rule Britannia", "Land of Hope and Glory", "God Save the King", "Jerusalem"], correct: 2, explanation: "The UK national anthem is 'God Save the King.'" },
+      { question: "What is the currency of the UK?", answers: ["Euro", "Dollar", "Pound Sterling", "Franc"], correct: 2, explanation: "The currency of the UK is the Pound Sterling." },
+      { question: "What is the official residence of the UK Prime Minister?", answers: ["10 Downing Street", "Buckingham Palace", "Windsor Castle", "Whitehall"], correct: 0, explanation: "The official residence of the UK Prime Minister is 10 Downing Street." },
+      { question: "Which city hosted the 2012 Summer Olympics?", answers: ["London", "Manchester", "Birmingham", "Glasgow"], correct: 0, explanation: "London hosted the 2012 Summer Olympics." },
+      { question: "What is the national flower of Wales?", answers: ["Rose", "Thistle", "Shamrock", "Daffodil"], correct: 3, explanation: "The daffodil is the national flower of Wales." },
+      { question: "What is the national flower of Scotland?", answers: ["Rose", "Thistle", "Shamrock", "Daffodil"], correct: 1, explanation: "The thistle is the national flower of Scotland." },
+      { question: "What is the name of the UK's flag?", answers: ["Union Jack", "St. George's Cross", "St. Andrew's Cross", "Red Dragon"], correct: 0, explanation: "The flag of the UK is known as the Union Jack." },
+      { question: "Who is the head of state in the UK?", answers: ["The Prime Minister", "The Monarch", "The Speaker", "The Chancellor"], correct: 1, explanation: "The Monarch is the head of state in the UK." },
+      { question: "What is the UK known for inventing?", answers: ["Television", "Steam Engine", "Telephone", "All of the above"], correct: 3, explanation: "The UK is known for inventing the television, steam engine, and telephone, among other things." },
+      { question: "What is the UK's national sport?", answers: ["Football", "Cricket", "Rugby", "Tennis"], correct: 1, explanation: "Cricket is considered the national sport of the UK." },
+      { question: "Who wrote 'Romeo and Juliet'?", answers: ["Charles Dickens", "Jane Austen", "William Shakespeare", "J.K. Rowling"], correct: 2, explanation: "William Shakespeare wrote 'Romeo and Juliet.'" },
+      { question: "Which UK city is famous for its university founded in 1209?", answers: ["Cambridge", "Oxford", "Edinburgh", "Durham"], correct: 0, explanation: "Cambridge is famous for its university founded in 1209." },
+      { question: "What is the national flower of Northern Ireland?", answers: ["Rose", "Thistle", "Shamrock", "Daffodil"], correct: 2, explanation: "The shamrock is the national flower of Northern Ireland." },
+      { question: "When did the UK join the European Union?", answers: ["1957", "1973", "1992", "2001"], correct: 1, explanation: "The UK joined the European Union in 1973." },
+      { question: "When did the UK leave the European Union?", answers: ["2016", "2019", "2020", "2021"], correct: 2, explanation: "The UK officially left the European Union on January 31, 2020." },
+      { question: "Who was the UK's first female Prime Minister?", answers: ["Margaret Thatcher", "Theresa May", "Harriet Harman", "Angela Rayner"], correct: 0, explanation: "Margaret Thatcher was the UK's first female Prime Minister." },
+      { question: "What is the UK's highest mountain?", answers: ["Scafell Pike", "Snowdon", "Ben Nevis", "The Mourne Mountains"], correct: 2, explanation: "Ben Nevis is the UK's highest mountain." },
+      { question: "What is the UK's longest river?", answers: ["River Thames", "River Severn", "River Trent", "River Clyde"], correct: 1, explanation: "The River Severn is the UK's longest river." },
+      { question: "What is the name of the UK's central bank?", answers: ["Bank of England", "Royal Bank of Scotland", "Barclays", "HSBC"], correct: 0, explanation: "The central bank of the UK is the Bank of England." },
+      { question: "Which country is not part of the UK?", answers: ["Ireland", "Scotland", "England", "Wales"], correct: 0, explanation: "Ireland is not part of the UK; Northern Ireland is." },
+      { question: "What is the Magna Carta?", answers: ["A type of currency", "A historic document", "A law enforcement agency", "A novel"], correct: 1, explanation: "The Magna Carta is a historic document that established certain legal rights in England." },
+      { question: "What year was the Battle of Hastings?", answers: ["1066", "1215", "1415", "1666"], correct: 0, explanation: "The Battle of Hastings took place in 1066." },
+      { question: "Who designed the Houses of Parliament?", answers: ["Christopher Wren", "Charles Barry", "Norman Foster", "Zaha Hadid"], correct: 1, explanation: "Sir Charles Barry designed the Houses of Parliament." },
+      { question: "What is Stonehenge?", answers: ["A castle", "A prehistoric monument", "A cathedral", "A museum"], correct: 1, explanation: "Stonehenge is a prehistoric monument in Wiltshire, England." },
+      { question: "Which king signed the Magna Carta?", answers: ["King Richard I", "King John", "King Edward I", "King George III"], correct: 1, explanation: "King John signed the Magna Carta in 1215." },
+      { question: "What year did the Great Fire of London occur?", answers: ["1566", "1666", "1766", "1866"], correct: 1, explanation: "The Great Fire of London occurred in 1666." },
+      { question: "What is the UK’s voting age?", answers: ["16", "18", "21", "25"], correct: 1, explanation: "The voting age in the UK is 18." },
+      { question: "What is the national dish of the UK?", answers: ["Fish and chips", "Haggis", "Sushi", "Pizza"], correct: 0, explanation: "Fish and chips is considered the national dish of the UK." },
+      { question: "What is the UK’s population approximately?", answers: ["50 million", "67 million", "75 million", "85 million"], correct: 1, explanation: "The UK’s population is approximately 67 million." },
+      { question: "What is the UK’s official religion?", answers: ["Roman Catholic", "Anglican", "Buddhist", "No official religion"], correct: 1, explanation: "The official religion of the UK is Anglican." },
+      { question: "Which river flows through London?", answers: ["River Thames", "River Severn", "River Trent", "River Clyde"], correct: 0, explanation: "The River Thames flows through London." },
+      { question: "What is the UK's legal system based on?", answers: ["Civil Law", "Common Law", "Canon Law", "Customary Law"], correct: 1, explanation: "The UK's legal system is based on Common Law." },
+      { question: "What year did women gain the right to vote in the UK?", answers: ["1918", "1928", "1945", "1965"], correct: 1, explanation: "Women gained full voting rights in 1928." },
+      { question: "What is the UK’s national animal?", answers: ["Lion", "Bear", "Eagle", "Dragon"], correct: 0, explanation: "The lion is the national animal of the UK." },
+      { question: "What is the official language of the UK?", answers: ["English", "Welsh", "Gaelic", "French"], correct: 0, explanation: "English is the official language of the UK." },
+      { question: "What year was the NHS founded?", answers: ["1945", "1948", "1950", "1960"], correct: 1, explanation: "The NHS was founded in 1948." },
+      { question: "What is the UK’s primary legislative body?", answers: ["Parliament", "Congress", "Senate", "Assembly"], correct: 0, explanation: "The UK’s primary legislative body is Parliament." },
+      { question: "What is the UK’s education age range?", answers: ["3-16", "5-18", "7-19", "6-18"], correct: 1, explanation: "Children in the UK are required to attend school between ages 5 and 18." },
+      { question: "Who built Hadrian’s Wall?", answers: ["Romans", "Vikings", "Normans", "Anglo-Saxons"], correct: 0, explanation: "The Romans built Hadrian’s Wall." },
+      { question: "What is the smallest country in the UK?", answers: ["England", "Scotland", "Wales", "Northern Ireland"], correct: 3, explanation: "Northern Ireland is the smallest country in the UK." },
+      { question: "What is the significance of Trafalgar Square?", answers: ["A historical battle", "A war memorial", "A public space", "An art gallery"], correct: 0, explanation: "Trafalgar Square commemorates the Battle of Trafalgar in 1805." },
+      { question: "What is the UK's highest court?", answers: ["Crown Court", "Supreme Court", "High Court", "Court of Appeal"], correct: 1, explanation: "The Supreme Court is the highest court in the UK." }
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const questionData = questions[currentQuestionIndex];
+      quizContainer.innerHTML = `
+        <div class="question">
+          <h4>${currentQuestionIndex + 1}. ${questionData.question}</h4>
+          <div class="options">
+            ${questionData.answers.map((answer, index) => `<button class="btn btn-outline-primary" onclick="checkAnswer(${index})">${answer}</button>`).join('')}
+          </div>
+          <div class="explanation text-muted d-none"></div>
+        </div>
+      `;
+    }
+
+    function checkAnswer(selectedIndex) {
+      const questionData = questions[currentQuestionIndex];
+      const buttons = document.querySelectorAll('.options button');
+      const explanationDiv = document.querySelector('.explanation');
+
+      buttons.forEach((button, index) => {
+        button.disabled = true;
+        if (index === questionData.correct) {
+          button.classList.add('correct');
+        } else if (index === selectedIndex) {
+          button.classList.add('incorrect');
+        }
+      });
+
+      explanationDiv.textContent = questionData.explanation;
+      explanationDiv.classList.remove('d-none');
+
+      if (selectedIndex === questionData.correct) {
+        score++;
+      }
+
+      setTimeout(() => {
+        if (currentQuestionIndex < questions.length - 1) {
+          currentQuestionIndex++;
+          loadQuestion();
+        } else {
+          showScore();
+        }
+      }, 2000);
+    }
+
+    function showScore() {
+      quizContainer.classList.add('d-none');
+      const scoreSection = document.querySelector('.score-section');
+      scoreSection.classList.remove('d-none');
+      document.getElementById('score').textContent = score;
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      quizContainer.classList.remove('d-none');
+      document.querySelector('.score-section').classList.add('d-none');
+      loadQuestion();
+    }
+
+    // Initialize Quiz
+    loadQuestion();
+  </script>
+</body>
+</html>
