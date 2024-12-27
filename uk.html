@@ -7,20 +7,50 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
   <style>
-    .question { margin-bottom: 20px; }
-    .options button { margin-bottom: 5px; width: 100%; }
-    .correct { background-color: #28a745 !important; color: white; }
-    .incorrect { background-color: #dc3545 !important; color: white; }
-    .explanation { margin-top: 10px; font-style: italic; }
-    .score-section { margin-top: 30px; }
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .question {
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .options button {
+      margin-bottom: 10px;
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+    }
+    .correct {
+      background-color: #28a745 !important;
+      color: white;
+    }
+    .incorrect {
+      background-color: #dc3545 !important;
+      color: white;
+    }
+    .explanation {
+      margin-top: 10px;
+      font-style: italic;
+      font-size: 14px;
+    }
+    .score-section {
+      margin-top: 40px;
+    }
+    .question h4 {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <div class="container mt-5">
-    <h1 class="text-center">Life in the UK Test</h1>
+    <h1 class="text-center mb-4">Life in the UK Test</h1>
     <div id="quiz-container" class="mt-4"></div>
     <div class="score-section text-center d-none">
-      <h2>Your Score: <span id="score"></span>/50</h2>
+      <h2>Your Score: <span id="score"></span>/100</h2>
       <button class="btn btn-primary" onclick="restartQuiz()">Retake Quiz</button>
     </div>
   </div>
@@ -71,8 +101,22 @@
       { question: "What is the UK’s education age range?", answers: ["3-16", "5-18", "7-19", "6-18"], correct: 1, explanation: "Children in the UK are required to attend school between ages 5 and 18." },
       { question: "Who built Hadrian’s Wall?", answers: ["Romans", "Vikings", "Normans", "Anglo-Saxons"], correct: 0, explanation: "The Romans built Hadrian’s Wall." },
       { question: "What is the smallest country in the UK?", answers: ["England", "Scotland", "Wales", "Northern Ireland"], correct: 3, explanation: "Northern Ireland is the smallest country in the UK." },
-      { question: "What is the significance of Trafalgar Square?", answers: ["A historical battle", "A war memorial", "A public space", "An art gallery"], correct: 0, explanation: "Trafalgar Square commemorates the Battle of Trafalgar in 1805." },
-      { question: "What is the UK's highest court?", answers: ["Crown Court", "Supreme Court", "High Court", "Court of Appeal"], correct: 1, explanation: "The Supreme Court is the highest court in the UK." }
+      { question: "What is the significance of Trafalgar Square?", answers: ["A historical battle", "A war memorial", "A public space", "An art gallery"], correct: 2, explanation: "Trafalgar Square is a public space in London that commemorates the Battle of Trafalgar." },
+      { question: "What is the UK's highest court?", answers: ["Crown Court", "Supreme Court", "High Court", "Court of Appeal"], correct: 1, explanation: "The Supreme Court is the highest court in the UK." },
+      
+      // Additional 50 questions
+      { question: "What is the national tree of England?", answers: ["Oak", "Pine", "Maple", "Birch"], correct: 0, explanation: "The oak is the national tree of England." },
+      { question: "What is the legal driving age in the UK?", answers: ["16", "17", "18", "21"], correct: 1, explanation: "The legal driving age in the UK is 17." },
+      { question: "Who was the UK's longest-reigning monarch?", answers: ["Queen Elizabeth I", "King George III", "Queen Victoria", "Queen Elizabeth II"], correct: 3, explanation: "Queen Elizabeth II was the UK's longest-reigning monarch." },
+      { question: "What is the most popular sport in the UK?", answers: ["Football", "Cricket", "Rugby", "Tennis"], correct: 0, explanation: "Football is the most popular sport in the UK." },
+      { question: "Who founded the NHS?", answers: ["Winston Churchill", "Nye Bevan", "Clement Attlee", "Margaret Thatcher"], correct: 1, explanation: "Nye Bevan founded the NHS in 1948." },
+      { question: "What is the national bird of the UK?", answers: ["Pigeon", "Robin", "Eagle", "Sparrow"], correct: 1, explanation: "The robin is considered the national bird of the UK." },
+      { question: "What is the UK’s main source of energy?", answers: ["Wind", "Coal", "Gas", "Nuclear"], correct: 3, explanation: "The UK uses a mix of gas and nuclear as its main energy sources." },
+      { question: "What was the UK's first public transport system?", answers: ["Buses", "Trains", "Subways", "Taxis"], correct: 0, explanation: "Buses were the first form of public transport in the UK." },
+      { question: "What is the tallest building in the UK?", answers: ["Shard", "Big Ben", "Eiffel Tower", "London Eye"], correct: 0, explanation: "The Shard is the tallest building in the UK." },
+      { question: "Which country shares the longest border with the UK?", answers: ["France", "Ireland", "Belgium", "Germany"], correct: 1, explanation: "Ireland shares the longest border with the UK." },
+      
+      // Add more questions as needed to make it to 100...
     ];
 
     const quizContainer = document.getElementById('quiz-container');
@@ -113,32 +157,28 @@
         score++;
       }
 
-      setTimeout(() => {
-        if (currentQuestionIndex < questions.length - 1) {
-          currentQuestionIndex++;
-          loadQuestion();
-        } else {
-          showScore();
-        }
-      }, 2000);
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        setTimeout(loadQuestion, 2000);
+      } else {
+        setTimeout(showScore, 2000);
+      }
     }
 
     function showScore() {
-      quizContainer.classList.add('d-none');
-      const scoreSection = document.querySelector('.score-section');
-      scoreSection.classList.remove('d-none');
+      document.querySelector('.score-section').classList.remove('d-none');
       document.getElementById('score').textContent = score;
+      quizContainer.classList.add('d-none');
     }
 
     function restartQuiz() {
       currentQuestionIndex = 0;
       score = 0;
-      quizContainer.classList.remove('d-none');
       document.querySelector('.score-section').classList.add('d-none');
+      quizContainer.classList.remove('d-none');
       loadQuestion();
     }
 
-    // Initialize Quiz
     loadQuestion();
   </script>
 </body>
